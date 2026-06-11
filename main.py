@@ -99,96 +99,34 @@ def save_result(result):
     save_to_file(raw, None, key_world)
     
 
-def parsing_TextPolish(s_url):
-    """
-    解析链接中的json 数据返回
-    
-    格式如下
-    
-{
-  "TaskId": "cb87f7107703479185aa5e9c6184f18a",
-  "TextPolish": [
-    {
-      "FormalParagraphText": "内容11111",
-      "SentenceIds": [1, 2, 3, 4, 5],
-      "ParagraphId": "1781093395484500000",
-      "Start": 0,
-      "End": 22546
-    },
-    {
-      "FormalParagraphText": "内容222",
-      "SentenceIds": [6, 7, 8, 9, 10],
-      "ParagraphId": "1781093418460500000",
-      "Start": 22976,
-      "End": 68050
-    },
-    {
-      "FormalParagraphText": "内容333",
-      "SentenceIds": [11, 12, 13, 14, 15, 16],
-      "ParagraphId": "1781093463537500000",
-      "Start": 68053,
-      "End": 100066
-    }
-    ]
-}
-    
-    Args:
-        s_url (_type_): _description_
-    """
-    
-    pass
+def parsing_TextPolish(url):
+    """请求 URL 获取 TextPolish JSON 数据并解析"""
+    data = requests.get(url).json()
+    paragraphs = []
+    for item in data.get('TextPolish', []):
+        text = item.get('FormalParagraphText', '')
+        if text:
+            paragraphs.append(text)
+    return '\n\n'.join(paragraphs)
 
-def parsing_MeetingAssistance(s_url, l_result: list):
-        """
-    解析并链接中的json 数据并写人到 l_result 中
-    
-    格式如下
-    
-{
-  "TaskId": "cb87f7107703479185aa5e9c6184f18a",
-  "MeetingAssistance": {
-    "Keywords": [
-      "智能体",
-      "大模型",
-      "系统提示词"
-    ],
-    "KeySentences": [
-      {
-        "Id": 1,
-        "SentenceId": 3,
-        "Start": 7640,
-        "End": 12755,
-        "Text": "今天我们聊一下AI agent智能体skill部分"
-      },
-      {
-        "Id": 2,
-        "SentenceId": 4,
-        "Start": 12764,
-        "End": 19754,
-        "Text": "我们之前就聊过AG的智能体的整体流程"
-      },
-      {
-        "Id": 3,
-        "SentenceId": 6,
-        "Start": 22976,
-        "End": 27742,
-        "Text": "我们从最最原始的开始说"
-      }
-    ],
-    "Classifications": {
-      "Interview": 0.094075456,
-      "Lecture": 0.62436455,
-      "Meeting": 0.28156003
-    }
-  }
-}
-    
-    Args:
-        s_url (_type_): _description_
-    """
+def parsing_MeetingAssistance(url, l_result: list):
+    """请求 URL 获取 MeetingAssistance JSON 数据并提取关键词"""
+    data = requests.get(url).json()
+    keywords = data.get('MeetingAssistance', {}).get('Keywords', [])
+    l_result.extend(keywords)
 
-def save_to_file(raw, title, key_world = list(), path = "."):
-    pass
+def save_to_file(raw, title, key_world=None, path="."):
+    """保存文本内容和关键词到文件"""
+    if key_world is None:
+        key_world = []
+
+    content = raw
+    if key_world:
+        content = f"关键词：{', '.join(key_world)}\n\n{raw}"
+
+    filename = Path(path) / f"{int(time.time())}.txt"
+    filename.write_text(content, encoding='utf-8')
+    print(f"已保存到: {filename}")
 
 
 if __name__ == '__main__':
