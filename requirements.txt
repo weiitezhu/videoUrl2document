@@ -1,0 +1,4 @@
+requests
+aliyun-python-sdk-core
+python-dotenv
+flask

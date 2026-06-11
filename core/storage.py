@@ -14,11 +14,17 @@ class Storage:
         if hashtags:
             all_keywords.extend([f"#{tag}" for tag in hashtags])
 
-        content = text
+        # 构建 Markdown 格式
+        content = f"# {title}\n\n"
+
         if all_keywords:
-            content = f"关键词：{', '.join(all_keywords)}\n\n{text}"
+            content += "## 关键词\n\n"
+            content += ", ".join(f"`{kw}`" for kw in all_keywords) + "\n\n"
+
+        content += "## 内容\n\n"
+        content += text
 
         safe_title = title.translate(str.maketrans('', '', '/:*?"<>|')) or str(int(time.time()))
-        filename = self.output_dir / f"{safe_title}.txt"
+        filename = self.output_dir / f"{safe_title}.md"
         filename.write_text(content, encoding='utf-8')
         return filename
