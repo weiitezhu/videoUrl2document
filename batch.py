@@ -22,6 +22,15 @@ def main():
     else:
         urls = sys.argv[1:]
 
+    # 过滤有效的抖音链接
+    import re
+    douyin_pattern = r'https?://[^\s]*(?:douyin\.com|v\.douyin\.com)'
+    urls = [url.strip() for url in urls if re.search(douyin_pattern, url.strip())]
+
+    if not urls:
+        print('错误: 没有找到有效的抖音链接')
+        sys.exit(1)
+
     # 初始化组件
     parser = DouyinParser()
     service = AliyunTingwu(

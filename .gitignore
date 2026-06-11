@@ -1,3 +1,6 @@
 node_modules/
 .env
 *.txt
+__pycache__
+*.pyc
+output/

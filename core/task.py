@@ -21,7 +21,8 @@ class TaskProcessor:
         print(f"[任务] 任务ID: {task_id}")
         result = self.service.get_result(task_id)
 
-        filename = self.storage.save(video.title, result.text, result.keywords)
+        hashtags = getattr(video, 'hashtags', None)
+        filename = self.storage.save(video.title, result.text, result.keywords, hashtags)
         print(f"[完成] {filename}")
         return filename
 
