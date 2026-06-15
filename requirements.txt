@@ -2,3 +2,14 @@ requests
 aliyun-python-sdk-core
 python-dotenv
 flask
+
+# 本地 Whisper 支持 (二选一)
+# GPU 版本 (推荐，需要 NVIDIA GPU 和 CUDA)
+# faster-whisper
+
+# CPU 版本 (无 GPU 时使用)
+# openai-whisper
+
+# Whisper 依赖
+torch  # PyTorch (用于 GPU 检测和 openai-whisper)
+jieba  # 中文分词 (用于更好的关键词提取)

@@ -17,6 +17,7 @@ Three-layer architecture for video-to-document conversion:
 
 **Service Layer** (`services/`):
 - `aliyun_tingwu.py`: Uses Aliyun Tingwu API for speech-to-text, polls every 10s until completion, fetches TextPolish and MeetingAssistance URLs for parsed results
+- `local_whisper.py`: Local Whisper transcription service, auto-detects GPU (uses faster-whisper if NVIDIA GPU available, otherwise openai-whisper), requires FFmpeg, includes jieba-based keyword extraction
 
 ## Key Flow
 
@@ -28,6 +29,11 @@ Three-layer architecture for video-to-document conversion:
 ## Commands
 
 ```bash
+# Install dependencies
+pip install -r requirements.txt
+cp .env.example .env
+
+# === Aliyun Tingwu (cloud API) ===
 # Single URL
 python main.py "https://v.douyin.com/xxxxx/"
 
@@ -37,17 +43,29 @@ python batch.py "url1" "url2" "url3"
 # Batch from file (one URL per line, filters for douyin.com)
 python batch.py urls.txt
 
-# Install
-pip install -r requirements.txt
-cp .env.example .env
+# === Local Whisper (no API, requires FFmpeg) ===
+# Install FFmpeg: choco install ffmpeg (Windows)
+# Install Whisper engine (choose one):
+#   GPU: pip install faster-whisper
+#   CPU: pip install openai-whisper
+# Optional: pip install jieba (better Chinese keyword extraction)
+
+# Batch processing with local Whisper
+python batch_local.py "url1" "url2" "url3"
+python batch_local.py urls.txt
+
+# Change model size in batch_local.py:
+#   LocalWhisper(model_size="base")  # tiny, base, small, medium, large
 ```
 
 ## Environment Variables
 
-Required in `.env`:
+Required in `.env` (for Aliyun Tingwu only):
 - `ALIYUN_ACCESS_KEY_ID`
 - `ALIYUN_ACCESS_KEY_SECRET`
 - `ALIYUN_APPKEY` (Tingwu project)
+
+**Note**: Local Whisper does not require API credentials.
 
 ## Output Format
 
