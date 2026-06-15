@@ -1,0 +1,19 @@
+{
+  "skills": {
+    "dy2text": {
+      "command": "dy2text-skill/dy2text.bat",
+      "description": "Convert Douyin videos to text documents with transcription",
+      "cwd": "${workspaceFolder}",
+      "allowedPrompts": [
+        {
+          "tool": "Bash",
+          "prompt": "run Python scripts in dy2text-skill"
+        },
+        {
+          "tool": "Bash",
+          "prompt": "activate virtual environment"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "skills": {
+    "dy2text": {
+      "command": "dy2text-skill/dy2text.bat",
+      "description": "Convert Douyin videos to text documents",
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}
